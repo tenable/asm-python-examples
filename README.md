@@ -94,3 +94,43 @@ Delete an IP or a source (with its id) from the given inventory:
 python3 delete-ip.py ip 1.1.1.1 $APIKEY
 python3 delete-ip.py source 13 $APIKEY
 ```
+
+## Add IP by geography
+
+The `add-by-geo.py` script adds country-specific IP sources to your inventory based on the IP2 location repository.
+
+__Note: this may add a huge number of sources, it is not recommended to use this script__
+__without first running without the --add-to-inventory parameter__
+
+### Usage
+
+First, register for an account with IP2Location LITE - http://lite.ip2location.com
+
+Second, download the IP2location-lite database files (IPv6) CSV files and place in the `./ip2loc/` folder.
+
+Third, install the dependencies:
+
+```shell
+pip install argparse requests sortedcontainers
+```
+
+Finally, update APIURL and obtain a single-inventory API key to use as argument to --apikey
+
+Add to inventory all country-specific (-c = UA) IP ranges (-4, IPv4 only) as sources:
+
+```shell
+python3 add-by-geo.py -4 -f COUNTRY_CODE=UA --add-to-inventory --apikey=asdfasdf
+```
+
+It is an error to use `--add-to-inventory` without a valid, single-inventory API key.
+
+Output, but do not add to inventory all ip ranges coorsponding to Los Angeles in country=US:
+
+```shell
+python3 add-by-geo.py -f COUNTRY_CODE=US -f CITY="Los Angeles"
+```
+
+Output, but do not add to inventory all IP ranges in any country, region, or city named "Dallas"
+```shell
+python3 add-by-geo.py -f ANY="Dallas"
+```
