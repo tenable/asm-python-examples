@@ -25,12 +25,10 @@ file analysis based on the inventory data.
 
 ### Usage
 
-> For now, this script requires Python 3.6, because the fpdf dependency doesn't work with newer versions.
-
 Install the dependencies:
 
 ```shell
-pip install argparse datetime fpdf matplotlib pypdf2 requests
+pip install argparse datetime fpdf2 matplotlib pypdf2 requests
 ```
 
 Create a pdf report by passing the inventory api key:
