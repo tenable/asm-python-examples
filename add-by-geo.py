@@ -124,20 +124,23 @@ def main(argv: Sequence[str] | None = None) -> int:
     api = None
     if args.add_to_inventory:
         api = BitDiscoveryApi(APIURL, args.apikey)
-        inventories = api.find_inventories(0,0)
-        assert(inventories.json.code == 200)
+        inventories = api.find_inventories(0, 0)
+  
+        assert(inventories['code'] == 400)
+        assert(inventories['message'] ==
+               'Your API access is limited to a single inventory.')
 
     for i, (start, end) in enumerate(resa):
         ip_range = f"{str(ipaddress.ip_address(start))}-{str(ipaddress.ip_address(end))}"
         if args.add_to_inventory:
-            
+
             result = try_multiple_times(
                 lambda: api.add_ip(ip_range),
                 max_tries=5
             )
             if result is None:
                 print(f"API call failed too many times for {ip_range}")
-            
+
         else:
             print(
                 f"{i:20}    {ip_range}")
