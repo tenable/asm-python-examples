@@ -154,7 +154,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(f'{ip_range}: max wait time remaining: {MAX_WAIT_TIME - elapsed_wait} s')
                 time.sleep(backoff_delay)
                 elapsed_wait += backoff_delay
-                backoff_delay = min(514, backoff_delay << 1)
+                backoff_delay = min(514, backoff_delay << 1, MAX_WAIT_TIME - elapsed_wait)
 
         else:
             print(
