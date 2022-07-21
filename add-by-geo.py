@@ -6,9 +6,14 @@ from enum import Enum
 import ipaddress
 import operator
 from sortedcontainers import SortedList
+import time
 from typing import List, Sequence
 
 from bitdiscovery.api import BitDiscoveryApi, try_multiple_times
+
+# max time to wait for the API to update based on loaded ip_range
+# after which the next ip_range will be added, this is throttling behavior.
+MAX_WAIT_TIME = 7200
 
 ZERO_IP_ADDRESS = ipaddress.ip_address(0)
 LOC_DB_PATH: str = ("ip2loc/IP2LOCATION-LITE-DB3.IPV6.CSV",)
@@ -125,7 +130,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.add_to_inventory:
         api = BitDiscoveryApi(APIURL, args.apikey)
         inventories = api.find_inventories(0, 0)
-  
+
         assert(inventories['code'] == 400)
         assert(inventories['message'] ==
                'Your API access is limited to a single inventory.')
@@ -141,9 +146,19 @@ def main(argv: Sequence[str] | None = None) -> int:
             if result is None:
                 print(f"API call failed too many times for {ip_range}")
 
+            elapsed_wait, backoff_delay = 0, 1  # 1 second
+
+            while elapsed_wait < MAX_WAIT_TIME \
+                    and api.search_for_source(0, 0, ip_range)['searches'][0]['dbdata'] == None:
+                # backoff, blocking wait for API to consume the ip range source
+                print(f'{ip_range}: max wait time remaining: {MAX_WAIT_TIME - elapsed_wait} s')
+                time.sleep(backoff_delay)
+                elapsed_wait += backoff_delay
+                backoff_delay = min(514, backoff_delay << 1)
+
         else:
             print(
-                f"{i:20}    {ip_range}")
+                f'{i:20}    {ip_range}')
 
     return retv
 
