@@ -121,7 +121,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     resa.append(ip_ranges[0])
     for i in range(len(ip_ranges)):
 
-        if ip_ranges[i][0] <= resa[i-1][1]+1:
+        if ip_ranges[i][0] <= resa[-1][1]+1:
             resa[-1] = (resa[-1][0], max(ip_ranges[i][1], resa[-1][1]))
         else:
             resa.append(ip_ranges[i])
