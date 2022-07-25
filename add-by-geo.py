@@ -11,7 +11,7 @@ from typing import List, Sequence
 
 from bitdiscovery.api import BitDiscoveryApi, try_multiple_times
 
-# max time to wait for the API to update based on loaded ip_range
+# max time (seconds) to wait for the API to update based on loaded ip_range
 # after which the next ip_range will be added, this is throttling behavior.
 MAX_WAIT_TIME = 7200
 
@@ -121,7 +121,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     resa.append(ip_ranges[0])
     for i in range(len(ip_ranges)):
 
-        if ip_ranges[i][0] <= resa[-1][1]+1:
+        if ip_ranges[i][0] <= resa[i-1][1]+1:
             resa[-1] = (resa[-1][0], max(ip_ranges[i][1], resa[-1][1]))
         else:
             resa.append(ip_ranges[i])
