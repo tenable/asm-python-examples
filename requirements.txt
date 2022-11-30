@@ -20,5 +20,5 @@ requests==2.25.1
 sh==1.14.1
 six==1.15.0
 tld==0.12.5
-urllib3==1.26.2
+urllib3==1.26.5
 zope.interface==5.2.0
