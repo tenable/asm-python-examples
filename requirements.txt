@@ -4,7 +4,7 @@ cycler==0.10.0
 DateTime==4.3
 et-xmlfile==1.0.1
 fpdf2==2.5.5
-idna==2.10
+idna==3.7
 ipaddress==1.0.23
 jdcal==1.4.1
 kiwisolver==1.4.3
